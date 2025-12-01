@@ -2,9 +2,15 @@
  * GET /info → merges two small helpers for easy unit testing.
  * Returns: { name, version, node, uptime }
  */
-/* eslint-disable */
-const { Router } = require('express')
-const packageJson = require('../../../package.json')
+import { Router } from 'express'
+import { readFile } from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
+import path from 'node:path'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const packageJson = JSON.parse(
+  await readFile(path.join(__dirname, '../../../package.json'), 'utf-8')
+)
 
 const router = Router()
 
@@ -17,4 +23,4 @@ router.get('/info', (req, res) => {
   })
 })
 
-module.exports = router
+export default router
