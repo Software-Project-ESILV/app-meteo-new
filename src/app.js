@@ -18,24 +18,28 @@ const require = createRequire(import.meta.url)
 
 const app = express()
 
+// Enable JSON parsing for API routes before mounting routers
+app.use(express.json())
+
 // Simple root + health endpoints
 app.get('/', (_req, res) => res.json({ ok: true, message: 'Hello from CI/CD demo 👋' }))
 app.get('/health', (_req, res) => res.status(200).send('OK'))
 
-// Chargement synchrone des routes
-const autoDir = path.join(__dirname, 'routes', 'auto')
-if (fs.existsSync(autoDir)) {
-  const files = fs.readdirSync(autoDir).filter(f => f.endsWith('.route.js'))
+// Load route collections (auto + api) to keep responsibilities isolated
+const routeFolders = ['auto', 'api']
+for (const folder of routeFolders) {
+  const dirPath = path.join(__dirname, 'routes', folder)
+  if (!fs.existsSync(dirPath)) continue
+  const files = fs.readdirSync(dirPath).filter(f => f.endsWith('.route.js'))
   for (const f of files) {
     try {
-      const full = path.join(autoDir, f)
-      // Utilisation de require au lieu d'import dynamique
+      const full = path.join(dirPath, f)
       const module = require(full)
       const router = module.default || module
       if (router) app.use('/', router)
     } catch (error) {
-      console.error(`Failed to load route ${f}:`, error)
-      throw error // Propager l'erreur pour échouer au démarrage
+      console.error(`Failed to load route ${folder}/${f}:`, error)
+      throw error
     }
   }
 }
