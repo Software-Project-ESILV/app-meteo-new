@@ -30,9 +30,23 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      # 5) Test with coverage
-      - name: Test (with coverage)
-        run: npm test -- --coverage
+      # 5) Test with coverage with debug info
+      - name: Test (with coverage and debug)
+        run: |
+          # Afficher la version de Node.js et npm
+          node -v
+          npm -v
+          
+          # Lancer les tests avec plus de verbosité
+          echo "Démarrage des tests..."
+          npm test -- --coverage --watch=false --reporter=verbose
+          
+          # Tester manuellement la route /info
+          echo "\nTest manuel de la route /info :"
+          curl -v http://localhost:3000/info || echo "\nLe test manuel a échoué - le serveur n'est peut-être pas démarré"
+        env:
+          NODE_ENV: test
+          PORT: 3000
 
       # 6) Upload coverage folder as an artifact (viewable in Actions UI)
       - name: Upload coverage artifact
