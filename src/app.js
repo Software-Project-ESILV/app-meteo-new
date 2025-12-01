@@ -22,15 +22,21 @@ const app = express()
 app.get('/', (_req, res) => res.json({ ok: true, message: 'Hello from CI/CD demo 👋' }))
 app.get('/health', (_req, res) => res.status(200).send('OK'))
 
-// Auto-mount all routers placed under src/routes/auto
+// Chargement synchrone des routes
 const autoDir = path.join(__dirname, 'routes', 'auto')
 if (fs.existsSync(autoDir)) {
   const files = fs.readdirSync(autoDir).filter(f => f.endsWith('.route.js'))
   for (const f of files) {
-    const full = path.join(autoDir, f)
-    const mod = require(full)
-    const router = mod.default || mod
-    if (router) app.use('/', router)
+    try {
+      const full = path.join(autoDir, f)
+      // Utilisation de require au lieu d'import dynamique
+      const module = require(full)
+      const router = module.default || module
+      if (router) app.use('/', router)
+    } catch (error) {
+      console.error(`Failed to load route ${f}:`, error)
+      throw error // Propager l'erreur pour échouer au démarrage
+    }
   }
 }
 
