@@ -20,22 +20,26 @@ const app = express()
 app.get('/', (_req, res) => res.json({ ok: true, message: 'Hello from CI/CD demo 👋' }))
 app.get('/health', (_req, res) => res.status(200).send('OK'))
 
-// Auto-mount all routers placed under src/routes/auto
-const autoDir = path.join(__dirname, 'routes', 'auto')
-if (fs.existsSync(autoDir)) {
-  const files = fs.readdirSync(autoDir).filter(f => f.endsWith('.route.js'))
-  await Promise.all(files.map(async (f) => {
-    try {
-      const full = path.join(autoDir, f)
-      const modulePath = new URL(`file://${full}`)
-      const module = await import(modulePath)
-      const router = module.default || module
-      if (router) app.use('/', router)
-    } catch (error) {
-      console.error(`Failed to load route ${f}:`, error)
+// Fonction pour charger les routes de manière asynchrone
+async function loadRoutes () {
+  const autoDir = path.join(__dirname, 'routes', 'auto')
+  if (fs.existsSync(autoDir)) {
+    const files = fs.readdirSync(autoDir).filter(f => f.endsWith('.route.js'))
+    for (const f of files) {
+      try {
+        const full = path.join(autoDir, f)
+        const module = await import(full)
+        const router = module.default || module
+        if (router) app.use('/', router)
+      } catch (error) {
+        console.error(`Failed to load route ${f}:`, error)
+      }
     }
-  }))
+  }
 }
+
+// Charger les routes
+loadRoutes().catch(console.error)
 
 // Global error middleware last
 app.use(errorHandler)
