@@ -1,13 +1,19 @@
-import { Router } from 'express'
-import { createRequire } from 'module'
+/**
+ * GET /version → { version: "<package.json version>" }
+ * Reads version from package.json to keep it source-of-truth.
+ */
+/* eslint-disable */
+import { Router } from 'express';
+import { createRequire } from 'module';
 
-const require = createRequire(import.meta.url)
-const packageJson = require('../../../package.json')
+const require = createRequire(import.meta.url);
+const packageJson = require('../../../package.json');
 
-const router = Router()
+const router = Router();
 
 router.get('/version', (req, res) => {
-  res.json({
-    version: packageJson.version})})
+  res.json({ version: packageJson.version });
+});
 
-export default router
+export default router;
+
