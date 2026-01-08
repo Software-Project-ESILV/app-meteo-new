@@ -7,7 +7,7 @@ const router = Router()
 
 // -- Controller --
 
-async function getReports (req, res, next) {
+async function getReports(req, res, next) {
   try {
     const { lat, lon, radius = 10000 } = req.query // default 10km
 
@@ -49,19 +49,35 @@ async function getReports (req, res, next) {
   } catch (err) { next(err) }
 }
 
-async function createReport (req, res, next) {
+async function createReport(req, res, next) {
   try {
     const result = await createReportService(req.body)
-    res.status(201).json(result)
+    // Contract Adapter for Tests
+    const response = {
+      id: result._id,
+      type: result.type,
+      ...result.toObject ? result.toObject() : result
+    }
+    res.status(201).json(response)
   } catch (err) { next(err) }
 }
 
-async function voteReport (req, res, next) {
+async function voteReport(req, res, next) {
   try {
     const { id } = req.params
-    const { type } = req.body // 'up' or 'down'
+    // Support legacy 'type' or test contract 'value'
+    let { type, value } = req.body
+    if (value !== undefined) {
+      type = value > 0 ? 'up' : 'down'
+    }
+
     const report = await voteReportService(id, type)
-    res.json(report)
+
+    // Contract Adapter for Tests
+    res.json({
+      upvotes: report.votes.up,
+      ...report.toObject()
+    })
   } catch (err) { next(err) }
 }
 

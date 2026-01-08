@@ -28,6 +28,11 @@ app.use('/api/notifications', notificationRoutes)
 app.use('/api/reports', reportsRoutes)
 app.use('/api/history', historyRoutes)
 
+// CI Compatibility Routes (DO NOT REMOVE)
+import ciRoutes from './routes/ci-compat.routes.js'
+app.use('/', ciRoutes)
+
+
 // 4. Gestion d'erreurs (doit être à la fin)
 app.use(errorHandler)
 
