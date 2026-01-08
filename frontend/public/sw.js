@@ -1,4 +1,7 @@
 // public/sw.js
+
+/* eslint-env serviceworker */
+
 self.addEventListener('push', function (event) {
   if (event.data) {
     const payload = event.data.json()
