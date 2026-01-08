@@ -7,7 +7,7 @@ const router = Router()
 
 // -- Controller --
 
-async function getReports(req, res, next) {
+async function getReports (req, res, next) {
   try {
     const { lat, lon, radius = 10000 } = req.query // default 10km
 
@@ -49,7 +49,7 @@ async function getReports(req, res, next) {
   } catch (err) { next(err) }
 }
 
-async function createReport(req, res, next) {
+async function createReport (req, res, next) {
   try {
     const result = await createReportService(req.body)
     // Contract Adapter for Tests
@@ -62,7 +62,7 @@ async function createReport(req, res, next) {
   } catch (err) { next(err) }
 }
 
-async function voteReport(req, res, next) {
+async function voteReport (req, res, next) {
   try {
     const { id } = req.params
     // Support legacy 'type' or test contract 'value'

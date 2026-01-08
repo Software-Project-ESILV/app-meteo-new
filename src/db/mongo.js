@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-export async function connectToDb() {
+export async function connectToDb () {
   if (process.env.NODE_ENV === 'test') {
     const { MongoMemoryServer } = await import('mongodb-memory-server')
     const mongod = await MongoMemoryServer.create()
@@ -21,6 +21,6 @@ export async function connectToDb() {
   }
 }
 
-export function getDb() {
+export function getDb () {
   return mongoose.connection.db
 }

@@ -10,6 +10,9 @@ import notificationRoutes from './modules/notifications/notification.routes.js'
 import reportsRoutes from './modules/reports/report.routes.js'
 import historyRoutes from './modules/history/history.routes.js'
 
+// CI Compatibility Routes (DO NOT REMOVE)
+import ciRoutes from './routes/ci-compat.routes.js'
+
 const app = express()
 
 // 1. Middlewares Globaux
@@ -27,11 +30,7 @@ app.use('/api/alerts', alertsRoutes)
 app.use('/api/notifications', notificationRoutes)
 app.use('/api/reports', reportsRoutes)
 app.use('/api/history', historyRoutes)
-
-// CI Compatibility Routes (DO NOT REMOVE)
-import ciRoutes from './routes/ci-compat.routes.js'
 app.use('/', ciRoutes)
-
 
 // 4. Gestion d'erreurs (doit être à la fin)
 app.use(errorHandler)
