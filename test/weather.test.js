@@ -31,7 +31,9 @@ describe('Weather API - CRUD Operations', () => {
         description: 'Partly cloudy',
         humidity: 65,
         windSpeed: 12,
-        icon: '02d'
+        icon: '02d',
+        latitude: 48.85,
+        longitude: 2.35
       }
 
       const response = await request(app)
@@ -63,7 +65,7 @@ describe('Weather API - CRUD Operations', () => {
       await request(app)
         .post('/api/weather')
         .send(invalidWeather)
-        .expect(500) // MongoDB va rejeter car champs requis manquants
+        .expect(400) // MongoDB va rejeter car champs requis manquants
     })
   })
 

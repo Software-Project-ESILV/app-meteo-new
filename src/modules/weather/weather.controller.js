@@ -25,7 +25,6 @@ export async function createWeather (req, res, next) {
   try {
     const { city, country, temperature, description, humidity, windSpeed, icon, latitude, longitude } = req.body
 
-    // Si lat/lon sont fournis, on crée l'objet location GeoJSON
     let location
     if (latitude !== undefined && longitude !== undefined) {
       location = {
@@ -34,13 +33,17 @@ export async function createWeather (req, res, next) {
       }
     }
 
-    // 💾 DB SAVE: C'est ici que Mongoose enregistre définitivement les données dans MongoDB
     const created = await Weather.create({
       city, country, temperature, description, humidity, windSpeed, icon, location
     })
-    res.status(201).json(created)
+
+    return res.status(201).json(created)
   } catch (err) {
-    next(err)
+    // ✅ si champs manquants → 400 (au lieu de 500)
+    if (err?.name === 'ValidationError') {
+      return res.status(400).json({ error: true, message: err.message })
+    }
+    return next(err)
   }
 }
 

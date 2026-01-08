@@ -7,12 +7,16 @@ import PushSubscription from './notification.model.js'
 
 // Si pas de clés en env, on prévient
 if (!process.env.VAPID_PUBLIC_KEY) {
-  console.warn('⚠️ [VAPID] Aucune clé VAPID définie. Les notifications push ne marcheront pas tant que vous ne mettez pas des clés valides dans le .env ou le code.')
+  if (process.env.NODE_ENV !== 'test') {
+    console.warn('⚠️ [VAPID] Aucune clé VAPID définie. Les notifications push ne marcheront pas tant que vous ne mettez pas des clés valides dans le .env ou le code.')
+  }
   // Générer un set pour aider le dev
   const keys = webpush.generateVAPIDKeys()
-  console.log('✅ VOICI DES CLÉS GÉNÉRÉES À COPIER :')
-  console.log('VAPID_PUBLIC_KEY=' + keys.publicKey)
-  console.log('VAPID_PRIVATE_KEY=' + keys.privateKey)
+  if (process.env.NODE_ENV !== 'test') {
+    console.log('✅ VOICI DES CLÉS GÉNÉRÉES À COPIER :')
+    console.log('VAPID_PUBLIC_KEY=' + keys.publicKey)
+    console.log('VAPID_PRIVATE_KEY=' + keys.privateKey)
+  }
 
   // On utilise celles-ci pour la session courante
   webpush.setVapidDetails(

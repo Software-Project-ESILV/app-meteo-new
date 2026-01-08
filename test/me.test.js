@@ -3,9 +3,14 @@
  */
 import request from 'supertest'
 import app from '../src/app.js'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, beforeAll } from 'vitest'
+import { connectToDb } from '../src/db/mongo.js'
 
 describe('Me API', () => {
+  beforeAll(async () => {
+    await connectToDb()
+  })
+
   beforeEach(async () => {
     await request(app).post('/api/reports/reset')
   })
