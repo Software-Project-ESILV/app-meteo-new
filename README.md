@@ -40,19 +40,6 @@ cp .env.example .env
 ```
 
 ## Lancement
-    
-### Option Recommandée (Tout-en-un)
-Lance le Backend et le Frontend en parallèle avec une seule commande.
-
-```bash
-# Dans le dossier racine
-npm run dev:all
-```
-- **Backend** : http://localhost:3000
-- **Frontend** : http://localhost:5173 (S'ouvre dans votre navigateur)
-
-### Option Manuelle (Séparément)
-Si vous préférez gérer les terminaux séparément :
 
 **Terminal 1 (Backend)**
 ```bash
