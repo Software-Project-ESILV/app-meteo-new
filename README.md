@@ -90,4 +90,7 @@ npm run lint
 ```
 
 ## Auteurs
-Projet étudiant DevOps Lab.
+Albert SOUYRIS
+Adam TOUCHANE
+Amine MEGHAGHI
+Saber BERREHILI
